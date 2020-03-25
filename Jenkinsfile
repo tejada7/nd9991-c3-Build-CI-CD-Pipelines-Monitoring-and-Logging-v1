@@ -6,5 +6,12 @@ pipeline {
         sh 'tidy -q -e *.html'
       }
     }
+    stage('Upload to AWS') {
+      steps {
+        withAWS(region:'us-east-2',credentials:'aws-static') {
+          s3Upload(pathStyleAccessEnabled:true, payloadSigningEnabled: true, file:'index.html', bucket:'my-s3-bucket-jenkins')
+        }
+      }
+    }
   }
 }
